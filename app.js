@@ -9,12 +9,16 @@ var http = require('http'),
 var RECIPS = globals.RECIPS;
 var FILTERS = globals.FILTERS;
 
-function send_sms (from) {
+function sendSms (to, from) {
+  twitter.get_tweets(FILTERS, function (tweets) {
+    twilio.sms(twitter.sample_tweet(tweets), to, from);
+  });
+}
+
+function sendSmsToEveryone (from) {
   for (var i = RECIPS.length - 1; i >= 0; i--) {
     var to = RECIPS[i];
-    twitter.get_tweets(FILTERS, function (tweets) {
-      twilio.sms(twitter.sample_tweet(tweets), to, from);
-    });
+    sendSms(to, from);
   };
 }
 
@@ -25,15 +29,17 @@ http.createServer(function (req, res) {
     res.end();
     return;
   }
-  sender = url.parse(req.url, true).query.To;
-  send_sms();
+  var params = url.parse(req.url, true).query;
+  var sender = params.To;
+  var reciever = params.From;
+  sendSms(reciever, sender)
   res.writeHead(200, {'Content-Type': 'text/plain'});
   res.end();
 }).listen(1337, '127.0.0.1');
 
-// Cron job for 
+// Cron job 
 new cronJob('0 9,10,11,12,13,14,15,16,17,18,19,20 * * *', function() {
-  send_sms();
+  sendSmsToEveryone();
 }, null, true, 'America/New_York');
 
 console.log('Server initialized');
