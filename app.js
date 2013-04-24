@@ -6,13 +6,16 @@ var http = require('http'),
     // load globals
     vars = require('./lib/application');
 
-var RECIP = globals.RECIP;
+var RECIPS = globals.RECIPS;
 var FILTERS = globals.FILTERS;
 
 function send_sms (from) {
-  twitter.get_tweets(FILTERS, function (tweets) {
-    twilio.sms(twitter.sample_tweet(tweets), RECIP, from);
-  });
+  for (var i = RECIPS.length - 1; i >= 0; i--) {
+    var to = RECIPS[i];
+    twitter.get_tweets(FILTERS, function (tweets) {
+      twilio.sms(twitter.sample_tweet(tweets), to, from);
+    });
+  };
 }
 
 // Web server for sms response
@@ -29,7 +32,7 @@ http.createServer(function (req, res) {
 }).listen(1337, '127.0.0.1');
 
 // Cron job for 
-new cronJob('0 9,12,17 * * *', function() {
+new cronJob('0 9,10,11,12,13,14,15,16,17,18,19,20 * * *', function() {
   send_sms();
 }, null, true, 'America/New_York');
 
