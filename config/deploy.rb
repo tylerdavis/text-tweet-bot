@@ -24,10 +24,12 @@ task :log do
   run "tail -f #{log}"
 end
 
+puts shared_path
+
 namespace :customs do
   task :symlink do
     run "ln -nfs #{shared_path}/application.js #{release_path}/lib/application.js"
   end
 end
 
-before "forever:start", "customs:symlink"
+before "forever:stop", "customs:symlink"
