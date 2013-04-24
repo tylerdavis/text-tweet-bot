@@ -8,7 +8,7 @@ set :scm, :git
 set :use_sudo, false
 set :keep_releases, 5
 set :deploy_via, :remote_cache
-set :main_js, 'app.js'
+set :main_js, './app.js'
 
 set :symlinks, {"log" => "log"}
 
