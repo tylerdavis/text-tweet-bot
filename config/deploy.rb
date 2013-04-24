@@ -20,6 +20,6 @@ set :forever_cmd, "/usr/bin/forever"
 
 desc "Tail the application logfile"
 task :log do
-  log ="#{application_dir}/current/log/#{application}.log"
+  log ="#{deploy_to}/current/log/#{application}.log"
   run "tail -f #{log}"
 end
