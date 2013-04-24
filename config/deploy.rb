@@ -8,7 +8,7 @@ set :scm, :git
 set :use_sudo, false
 set :keep_releases, 5
 set :deploy_via, :remote_cache
-set :main_js, './app.js'
+set :main_js, 'app.js'
 
 set :symlinks, {"log" => "log"}
 
@@ -23,3 +23,11 @@ task :log do
   log ="#{deploy_to}/current/log/#{application}.log"
   run "tail -f #{log}"
 end
+
+namespace :customs do
+  task :symlink do
+    run "ln -nfs #{shared_path}/application.js #{release_path}/lib/application.js"
+  end
+end
+
+before "forever:start", "customs:symlink"
