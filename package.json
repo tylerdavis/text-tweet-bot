@@ -6,9 +6,9 @@
     "start": "node app"
   },
   "dependencies": {
-    "request": "*",
-    "twilio": "*",
-    "cron": "*",
+    "request": "2.20.0",
+    "twilio": "1.1.0",
+    "cron": "1.0.1",
     "time": "*"
   }
 }
